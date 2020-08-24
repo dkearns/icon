@@ -177,8 +177,12 @@ struct b_cset *alccset()
  */
 
 struct b_external *alcexternal(long nbytes, struct b_extlfuns *f, void *data)
+#passthru #ifdef __clang__ /* tests/general/extlvals fails w/o this */
+#passthru    __attribute__ ((optnone))
+#passthru #endif /*clang*/
    {
-   register struct b_external *blk;
+   struct b_external x;			/* only for faking offsetof */
+   register struct b_external *blk = &x;
    long datasize;
    static struct b_extlfuns fdefault; 	/* default dispatch table, all empty */
 
@@ -326,7 +330,7 @@ double val;
    AlcFixBlk(blk, b_real, T_Real)
 
 #ifdef Double
-/* access real values one word at a time */
+   /* store real value one word at a time into possibly unaligned slot */
    { int *rp, *rq;
      rp = (int *) &(blk->realval);
      rq = (int *) &val;

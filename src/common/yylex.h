@@ -263,7 +263,7 @@ char *s;
    {
    register char *s1;
    s1 = lex_sbuf.strtimage;
-   while (s != '\0' && s1 < lex_sbuf.endimage && *s == *s1) {
+   while (*s != '\0' && s1 < lex_sbuf.endimage && *s == *s1) {
       ++s;
       ++s1;
       }
@@ -285,7 +285,8 @@ static struct toktab *getnum(ac, cc)
 int ac;
 int *cc;
    {
-   register int c, r, state;
+   register int c;
+   register unsigned int r, state;
    int realflag, n, dummy;
 
    c = ac;
